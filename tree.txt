@@ -1,0 +1,71 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define a structure for tree nodes
+
+struct TreeNode {
+    char question[100];
+    char career[100];
+    struct TreeNode *yes;
+    struct TreeNode *no;
+};
+
+// Create a new tree node
+
+struct TreeNode* createNode(char *question, char *career) {
+    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    strcpy(newNode->question, question);
+    strcpy(newNode->career, career);
+    newNode->yes = NULL;
+    newNode->no = NULL;
+    return newNode;
+}
+
+// Traverse the tree based on user input
+
+void traverseTree(struct TreeNode* node) {
+    if(node == NULL) return;
+    char answer[10];
+    
+    if(strlen(node->question) > 0) {
+        printf("%s (yes/no): ", node->question);
+        scanf("%s", answer);
+        
+        if(strcmp(answer, "yes") == 0) {
+            traverseTree(node->yes);
+        } else if(strcmp(answer, "no") == 0) {
+            traverseTree(node->no);
+        } else {
+            printf("Invalid answer. Please respond with yes or no.\n");
+            traverseTree(node);
+        }
+    } else {
+        printf("Career suggestion: %s\n", node->career);
+        // Add more detailed career descriptions here if needed
+    }
+}
+
+int main() {
+
+    // Creating a sample decision tree
+    printf("\nCAREER GUIDANCE FOR STUDENTS\n");
+    struct TreeNode* root = createNode("Do you like technology?", "");
+    root->yes = createNode("Do you enjoy coding?", "");
+    root->no = createNode("Do you prefer working with people?", "");
+    
+    root->yes->yes = createNode("", "Software Developer");
+    root->yes->no = createNode("", "System Analyst");
+    
+    root->no->yes = createNode("", "Human Resources");
+    root->no->no = createNode("", "Marketing Specialist");
+    
+    // Start the decision tree traversal
+
+    traverseTree(root);
+    
+    return 0;
+}
+ 
+
